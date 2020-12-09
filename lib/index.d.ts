@@ -43,6 +43,8 @@ export declare class MapsWrapper {
     private configuration;
     map?: any;
     markers: Array<Marker>;
+    googleSrc: string;
+    appleSrc: string;
     constructor(configuration?: WrapperConfiguration, defaultMaps?: DefaultMaps);
     addListener(eventName: string, callBack: (data?: any) => void): void;
     removeListener(eventName: string): void;
@@ -50,7 +52,9 @@ export declare class MapsWrapper {
     private getAppleToken;
     private loadGoogleMap;
     private loadAppleMap;
-    loadMap(): void;
+    private addScriptTag;
+    loadScript(callBack?: () => void): void;
+    loadMap(shouldLoadScript?: boolean): void;
     private addGoogleMarker;
     private addAppleMarker;
     addMarker(marker: Omit<Marker, 'mapMarkerObject'>): void;
