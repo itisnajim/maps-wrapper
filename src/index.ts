@@ -43,6 +43,8 @@ export class MapsWrapper {
     private configuration: WrapperConfiguration;
     map?: any;
     markers: Array<Marker> = [];
+    googleSrc = 'https://maps.googleapis.com/maps/api/js';
+    appleSrc = 'https://cdn.apple-mapkit.com/mk/5.x.x/mapkit.js';
 
     constructor(configuration: WrapperConfiguration = {} as any, defaultMaps: DefaultMaps = DefaultMaps.Auto) {
         this.configuration = configuration;
@@ -148,11 +150,32 @@ export class MapsWrapper {
         this.map = new mapkit.Map("map", mapOptions);
     }
 
-    loadMap(){
+    private addScriptTag(src: string, callBack?: ()=> void){
+        const script_tag = document.createElement(`script`);
+        script_tag.setAttribute("type","text/javascript");
+        script_tag.setAttribute("src", src);
+        if(callBack){ script_tag.onload = callBack };
+        const headElm = document.getElementsByTagName("head");
+        ((headElm ? headElm[0] : undefined) || document.documentElement).appendChild(script_tag);
+    }
+
+    loadScript(callBack?: ()=> void){
+        const src = (this.renderedMap == DefaultMaps.Apple) ? this.appleSrc : this.googleSrc+'?key='+this.configuration.google.apiKey;
+        this.addScriptTag(src, callBack);
+    }
+
+    loadMap(shouldLoadScript = false){
         this.markers = [];
-        (this.renderedMap == DefaultMaps.Apple) ? 
-            this.loadAppleMap() :
-            this.loadGoogleMap()
+        const loadMapFunc = 
+            (this.renderedMap == DefaultMaps.Apple) ? 
+                this.loadAppleMap :
+                this.loadGoogleMap;
+
+        if(shouldLoadScript){
+            this.loadScript(loadMapFunc);
+        }else{
+            loadMapFunc();
+        }
     }
 
 

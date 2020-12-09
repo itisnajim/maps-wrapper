@@ -1,6 +1,6 @@
 {
   "name": "maps-wrapper",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Wrapper for Google and Apple Maps Javascript/Web API",
   "main": "index.js",
   "types": "lib/index.d.ts",
